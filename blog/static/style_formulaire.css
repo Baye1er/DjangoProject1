@@ -1,0 +1,16 @@
+body{
+    font-family:montserrat;
+    }
+
+h4,h6{
+margin-left:15px;
+}
+
+.container{
+padding:15px;
+}
+.btn btn-success my-3{
+background-color:#0074D9;
+border: 1px solid #0074D9;
+color: white;
+}

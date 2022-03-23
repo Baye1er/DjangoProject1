@@ -1,0 +1,205 @@
+{% block content %}
+  <h1>Liste des offres d'emploi</h1>
+  {% if articles_list %}
+
+  <ul>
+    {% for article in articles_list %}
+      <li>
+        <a href="{{ article.get_absolute_url }}">{{ article.title }}</a> ({{article.lieu}} , {{article.date}})
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>Il n'y a plus d'offre.</p>
+  {% endif %}
+{% endblock %}
+
+
+
+def blog_detail(request, pk):
+    post = Post.objects.get(pk=pk)
+    form = Formulaire()
+    if request.method == "POST":
+        form = FormulaireForm(request.POST)
+        if form.is_valid():
+                subject=form.cleaned_data['subject']
+                from_email=form.cleaned_data['from_email']
+                nom_et_prenom=form.cleaned_data['nom_et_prenom']
+                date_nais=form.cleaned_data['date_nais']
+                lieu_nais=form.cleaned_data['lieu_nais']
+                telephone=form.cleaned_data['telephone']
+                adresse=form.cleaned_data['adresse']
+
+                recipients = ['bubsabcshop@gmail.com']
+                if nom_et_prenom:
+                    recipients.append(from_email)
+
+                send_mail(subject, from_email, nom_et_prenom, date_nais, lieu_nais, telephone, adresse,recipients)
+
+
+                return HttpResponseRedirect('/thanks')
+
+    formulaires = Formulaire.objects.filter(post=post)
+    context = {
+              "post": post,
+              "formulaires": formulaires,
+              "form": form,
+
+        }
+    return render(request, "blog_detail.html", context)
+
+
+
+
+
+
+class FormulaireForm(forms.Form):
+    subject = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Object"
+        })
+    )
+    from_email = forms.CharField(
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Email"
+        })
+    )
+    nom = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Nom"
+        })
+    )
+    prenom = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Prénom"
+        })
+    )
+    date_nais = forms.CharField(
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Date de naissance"
+        })
+    )
+    lieu_nais = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Lieu de naissance"
+        })
+    )
+    telephone = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Téléphone"
+        })
+    )
+    adresse = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Adresse"
+        })
+    )
+
+
+
+{% for post in posts %}
+
+                <h2>{{ post.title }}</h2><p>Publié le {{ post.created_on }}</p>
+                <p>{{ post.body }}</p>
+                <a href="{% url 'blog_detail' post.pk %}"
+                <p class="showarticle"><a href="{% url 'blog_detail' post.pk %}"> Afficher l'offre</a></p>
+
+
+
+
+
+
+
+
+
+<h4>{{blog.title}}</h4>
+    <form action="/thanks/" method="post">
+        {% csrf_token %}
+            {{ form }}
+       <div class="form-actions">
+        <input type="submit" value="Envoyer" />
+       </div>
+    </form>
+
+
+class Comment(models.Model):
+    author = models.CharField(max_length=60)
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    posts = models.ManyToManyField('Post', related_name='comments')
+
+
+
+<form action="/blog/" method="get">
+        <button type="submit" class="btn btn-primary">Accueil</button>
+    </form>
+
+
+
+
+
+def list(request):
+    post_list = Post.objects.all()
+    paginator = Paginator(post_list, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj
+    }
+    return render(request, 'blog_index.html', context)
+
+
+//// <div class="container-fluid">
+      {% block pagination %}
+
+        {% for post in page_obj %}
+        {{ post.full_name|upper }}<br>
+        {% endfor %}
+
+        <div class="pagination">
+             <span class="step-links">
+               {% if page_obj.has_previous %}
+                 <a href="?page=1">&laquo; Premier</a>
+                 <a href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+               {% endif %}
+
+                <span class="current">
+                     Page {{ page_obj.number}} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Suivant</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Dernier &raquo;</a>
+                {% endif %}
+             </span>
+        </div>
+      {% endblock %}
+
+   </div>
+///////
+
+<div class="container-fluid">
+            <form action="/blog/search/" class="navbar-form navbar-left" role="search">
+
+                <div class="form-group">
+                    <input type="text" class="form-control" name="query" value=""/>
+                </div>
+
+                <button type="submit" class="btn btn-default">Rechercher</button>
+            </form>
+    </div>

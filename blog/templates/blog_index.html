@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% extends "base.html" %}
+    {% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style_index.css' %}" media="all" type="text/css">
+    <meta charset="UTF-8">
+    <!--Social Media Share Buttons Script-->
+    <script type="text/javascript" src="https://platform-api.sharethis.com/js/sharethis.js#property=61eada0096a4850019caccc2&product=inline-share-buttons"
+            async="async">
+    </script>
+    {% block title %}<title>Accueil</title>{% endblock %}
+    <br>
+    <br>c
+        <h1>Offres d'Emploi à Dakar, Sénégal</h1>
+    <br>
+    <br>
+</head>
+
+<body>
+{% for post in last_posts %}
+<div class="col-md-4">
+    <div class="card">
+        <a href="{% url 'blog_detail' post.pk %}" class="stretched-link">
+        <div class="card-body">
+            <div class="card-title">
+                <img src="{% static '../static/icon.jpg' %}"  id="im" alt="Icone_Image">
+                <h5 id="titre_poste"><a href="{% url 'blog_detail' post.pk %}"> {{ post.title }}</a></h5>
+                <span class="fa fa-clock-o" id="dat"> Publié Le {{ post.created_on }}</span>
+                <p id="po" class="fa fa-map-marker fa-fw">&nbsp;{{ post.lieu }}</p>
+            </div>
+            <a href="{% url 'blog_detail' post.pk %}"
+               class="btn btn-primary" id="dt">
+                Détails
+            </a>
+        </div>
+        </a>
+    </div>
+</div>
+{% endfor %}
+        <br>
+        <br>
+        <br>
+
+<center>
+    {% if page_obj.has_previous %}
+    <a href="?page={{page_obj.previous_page_number}}">Précédent</a>
+    {% endif %}
+    <span>{{page_obj.number}}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{page_obj.next_page_number}}">Suivant</a>
+    {% endif %}
+</center>
+<br><br><br><br>
+<h6> Partager sur ...</h6>
+
+<div class="sharethis-inline-share-buttons"></div>
+<br>
+<br>
+</body>
+{% endblock %}
+
+</html>

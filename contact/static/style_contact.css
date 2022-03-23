@@ -1,0 +1,17 @@
+body{
+    font-family:montserrat;
+    }
+.content{
+padding:5px;
+}
+
+#btn{
+background-color:#0074D9;
+border: 1px solid #0074D9;
+color: white;
+border-radius:5px;
+}
+
+ul li{
+color:green;
+}

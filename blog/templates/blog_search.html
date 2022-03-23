@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+{% block title %} Recherche sur  {{ keywords }} {% endblock %}
+
+{% block content %}
+
+<div class="col-lg-8">
+    <br> <h6> Recherche sur  {{ keywords }}  </h6> <br>
+    {% for post in posts %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{post.title}}</h5>
+            <p class="card-subtitle mb-2 text-muted">Publié le {{ post.created_on }}</p>
+            <a href="{% url 'blog_detail' post.pk %}" class="card-link">Détails</a>
+        </div>
+    </div> <br> <br>
+    {% endfor %}
+</div>
+
+
+{% endblock %}
